@@ -1,0 +1,22 @@
+Implement a CI-CD process to build and deploy your Java app to Azure
+https://www.visualstudio.com/en-us/docs/build/java/quick-to-azure
+
+Create an Azure web app using the CLI
+Import sample code into your Team Services Git repo
+Set up continuous integration
+Set up continuous deployment
+Update to redeploy the code
+Browse to the app
+Clean up resources
+
+Last Update: 8/28/2017
+
+Visual Studio Team Services provides a highly customizable continuous integration (CI) and 
+deployment (CD) automation system for your Java apps. This quickstart shows how to set up 
+CI and CD to deploy a Java app. to an Azure web app. You create the web app using Azure CLI, 
+then set up CI/CD in Team Services. In the CI process, you build the Java app and run JUnit 
+tests using Maven. In the CD process, you deploy the build to an Azure web app.
+
+
+
+

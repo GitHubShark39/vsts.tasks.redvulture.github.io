@@ -1,0 +1,191 @@
+{
+    "id": "86c37a92-59a7-444b-93c7-220fcf91e29c",
+    "name": "JenkinsDownloadArtifacts",
+    "friendlyName": "Jenkins Download Artifacts",
+    "description": "Download artifacts produced by a Jenkins job",
+    "helpMarkDown": "Download artifacts produced by a [Jenkins](https://jenkins.io/) job.",
+    "category": "Utility",
+    "visibility": [
+        "Build",
+        "Release"
+    ],
+    "runsOn": [
+        "Agent",
+        "DeploymentGroup"
+    ],
+    "author": "Microsoft",
+    "demands": [],
+    "version": {
+        "Major": 1,
+        "Minor": 123,
+        "Patch": 0
+    },
+    "groups": [
+        {
+            "name": "advanced",
+            "displayName": "Advanced",
+            "isExpanded": false
+        }
+    ],
+    "instanceNameFormat": "Download artifacts produced by $(jobName)",
+    "inputs": [
+        {
+            "name": "serverEndpoint",
+            "type": "connectedService:Jenkins",
+            "label": "Jenkins service endpoint",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Select the service endpoint for your Jenkins instance.  To create one, click the Manage link and create a new Jenkins Service Endpoint."
+        },
+        {
+            "name": "jobName",
+            "type": "pickList",
+            "label": "Job name",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "The name of the Jenkins job to download artifacts from.  This must exactly match the job name on the Jenkins server.",
+            "properties": {
+              "EditableOptions": "True"
+            }
+        },
+        {
+            "name": "saveTo",
+            "type": "filePath",
+            "label": "Save to",
+            "defaultValue": "jenkinsArtifacts",
+            "required": true,
+            "helpMarkDown": "Jenkins artifacts will be downloaded and saved to this directory.  This directory will be created if it does not exist."
+        },
+        {
+            "name": "jenkinsBuild",
+            "type": "radio",
+            "label": "Download artifacts produced by",
+            "defaultValue": "LastSuccessfulBuild",
+            "required": true,
+            "groupName": "advanced",
+            "helpMarkDown": "Download artifacts produced by the last successful build, or from a specific build instance.",
+            "options": {
+                "LastSuccessfulBuild": "Last Successful Build",
+                "BuildNumber": "Build Number"
+            }
+        },
+        {
+            "name": "jenkinsBuildNumber",
+            "type": "pickList",
+            "label": "Jenkins build number",
+            "defaultValue": "1",
+            "required": true,
+            "groupName": "advanced",
+            "visibleRule": "jenkinsBuild == BuildNumber",
+            "helpMarkDown": "Download artifacts produced by this build.",
+            "properties": {
+              "EditableOptions": "True"
+            }
+        },
+        {
+          "name": "itemPattern",
+          "type": "string",
+          "label": "Item Pattern",
+          "defaultValue": "**",
+          "required": false,
+          "groupName": "advanced",
+          "helpMarkDown": "Minimatch pattern to filter files to be downloaded."
+        },
+        {
+            "name": "downloadCommitsAndWorkItems",
+            "type": "boolean",
+            "label": "Download Commits and WorkItems",
+            "defaultValue": false,
+            "required": false,
+            "groupName": "advanced",
+            "helpMarkDown": "Enables downloading the commits and workitem details associated with the Jenkins Job"
+        },
+        {
+            "name": "startJenkinsBuildNumber",
+            "type": "pickList",
+            "label": "Download commits and workitems from",
+            "defaultValue": "",
+            "required": false,
+            "visibleRule": "downloadCommitsAndWorkItems == true && jenkinsBuild == BuildNumber",
+            "groupName": "advanced",
+            "properties": {
+                "EditableOptions": "True"
+            },
+            "helpMarkDown": "Optional start build number for downloading commits and work items. If provided, all commits and work items between start build number and build number given as input to download artifacts will be downloaded."
+        },
+        {
+            "name": "artifactDetailsFileNameSuffix",
+            "type": "string",
+            "label": "Commit and WorkItem FileName",
+            "defaultValue": "",
+            "required": false,
+            "visibleRule": "downloadCommitsAndWorkItems == true",
+            "groupName": "advanced",
+            "helpMarkDown": "Optional file name suffix for commits and workitem attachment. Attachment will be created with commits_{suffix}.json and workitem_{suffix}.json. If this input is not provided attachments will be create with the name commits.json and workitems.json"
+        }
+    ],
+    "dataSourceBindings": [
+      {
+        "endpointId": "$(serverEndpoint)",
+        "target": "jobName",
+        "dataSourceName": "Jobs",
+        "resultTemplate": "{ \"Value\" : \"{{name}}\", \"DisplayValue\" : \"{{{displayName}}}\" }"
+      },
+      {
+        "endpointId": "$(serverEndpoint)",
+        "target": "jenkinsBuildNumber",
+        "dataSourceName": "Builds",
+        "parameters": {
+            "definition": "$(jobName)"
+        },
+        "resultTemplate": "{ \"Value\" : \"{{id}}\", \"DisplayValue\" : \"{{{displayName}}}\" }"
+      },
+      {
+        "endpointId": "$(serverEndpoint)",
+        "target": "startJenkinsBuildNumber",
+        "dataSourceName": "Builds",
+        "parameters": {
+            "definition": "$(jobName)"
+        },
+        "resultTemplate": "{ \"Value\" : \"{{id}}\", \"DisplayValue\" : \"{{{displayName}}}\" }"
+      }
+    ],
+    "execution": {
+        "Node": {
+            "target": "jenkinsdownloadartifacts.js",
+            "argumentFormat": ""
+        }
+    },
+    "messages": {
+        "GetArtifactsFromLastSuccessfulBuild": "Download artifacts from last successful build of %s",
+        "GetArtifactsFromBuildNumber": "Download artifacts from build number %d of %s",
+        "CouldNotGetLastSuccessfuilBuildNumber": "Could not get last successful build number",
+        "ServerCallFailed": "HTTP call to Jenkins server failed.",
+        "ServerCallErrorCode": "HTTP response code: %d",
+        "ArtifactSuccessfullyDownloaded": "Successfully downloaded artifact to %s",
+        "ArtifactDownloadUrl": "Downloading artifacts from: %s",
+        "DownloadingCommitsAndWorkItems": "Downloading commits and work items",
+        "JenkinsDownloadingChangeFromCurrentBuild": "Cannot find start build, commits and workitems will be downloaded from build: %s",
+        "DownloadingJenkinsChangeBetween": "Downloading commits and workitems between builds %s to %s",
+        "GettingCommitsFromSingleBuild": "Downloading commits associated with the build %s",
+        "DownloadingContentFromJenkinsServer": "Downloading content from Jenkins server:%s with strict SSL:%s",
+        "WritingCommitsTo": "Writing commits to file %s",
+        "UploadingAttachment": "uploading %s as attachment",
+        "SuccessfullyUploadedCommitsAttachment": "Successfully uploaded commits attachment",
+        "GetCommitMessages": "Getting commit messages from commits",
+        "GetCommitMessagesFailed": "Getting commits message failed with an error %s",
+        "CouldNotWriteToFile": "could not save content to file. Failed with an error %s",
+        "DownloadingWorkItemsFromSingleBuild": "Downloading workitems associated with the build %s",
+        "WritingWorkItemsTo": "Writing workitems to %s",
+        "SuccessfullyUploadedWorkItemsAttachment": "Successfully uploaded workitem attachment",
+        "FindBuildIndex": "Trying to find the build's index",
+        "FoundBuildIndex": "Found startIndex %s and endIndex %s",
+        "JenkinsArtifactDetailsParsingError": "Parsing ArtifactDetails failed with an error %s",
+        "SuccessfullyDownloadedCommitsAndWorkItems": "Commits and WorkItems Downloaded successfully",
+        "CommitsAndWorkItemsDownloadFailed": "Downloading Jenkins Commits and WorkItem failed with an error: %s",
+        "CannotFindBuilds": "Cannot find builds",
+        "JenkinsNoCommitsToFetch": "Start and end build Ids are same. Commits and workitems will not be downloaded.",
+        "InvalidJenkinsBuildNumber": "Cannot parse the Jenkins Build number.",
+        "InvalidJenkinsStartBuildNumber": "Invalid value mentioned for Jenkins start build number."
+    }
+}

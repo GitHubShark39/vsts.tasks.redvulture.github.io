@@ -1,0 +1,15 @@
+{
+  "name": "vsts-copyfiles-task",
+  "version": "1.0.0",
+  "description": "VSTS Copy Files Task",
+  "main": "copyfiles.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Microsoft/vsts-tasks.git"
+  },
+  "author": "Microsoft Corporation",
+  "license": "MIT",
+  "dependencies": {
+    "vsts-task-lib": "2.0.1-preview"
+  }
+}

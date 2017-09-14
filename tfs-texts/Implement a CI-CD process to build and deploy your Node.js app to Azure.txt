@@ -1,0 +1,24 @@
+Implement a CI-CD process to build and deploy your Node.js app to Azure
+
+https://www.visualstudio.com/en-us/docs/build/nodejs/quick-to-azure
+
+
+
+Last Update: 6/30/2017
+
+IN THIS ARTICLE
+Get ready to go
+Create an Azure web app using the CLI
+Import sample code into your Team Services Git repo
+Set up continuous integration
+Set up continuous deployment
+Update to redeploy the code
+Browse to the app
+Clean up resources
+
+
+Visual Studio Team Services provides a highly customizable continuous integration (CI) and deployment 
+(CD) automation system for your Node.js apps. This quickstart shows how to set up CI and CD to deploy a 
+Node.js app to an Azure web app. You create the web app using Azure CLI, then set up CI/CD in Team Services. 
+
+In the CI process, you use Gulp to run Mocha tests.

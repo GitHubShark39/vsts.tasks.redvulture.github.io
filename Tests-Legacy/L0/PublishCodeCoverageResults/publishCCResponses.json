@@ -1,0 +1,21 @@
+{
+    "getVariable": {
+        "System.DefaultWorkingDirectory": "/someDir"
+    },
+    "find": {
+        "/someDir": [
+            "someDir/someFile2",
+            "/someDir/someFile1"
+        ]
+    },
+    "exist": {
+        "/user/admin/summary.xml": true
+    },
+    "findMatch": {
+        "/some/*pattern": [
+            "some/path/one",
+            "some/path/two"
+        ],
+        "/other/*pattern": []
+    }
+}

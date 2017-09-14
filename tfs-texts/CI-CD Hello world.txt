@@ -1,0 +1,23 @@
+CI-CD Hello world
+
+
+CI/CD Hello world
+https://www.visualstudio.com/en-us/docs/build/get-started/ci-cd-part-1
+
+Build Your App
+
+
+A quick introduction to CI/CD
+Get set up with Team Services
+Add a script to your repository
+Create a build definition
+Publish an artifact from your build
+Enable continuous integration (CI)
+Save and queue the build
+Add some variables and commit a change to your script
+Create a release definition
+Deploy a release
+Change your code and watch it automatically deploy to production
+Put CI/CD to work for you
+Q&A
+
